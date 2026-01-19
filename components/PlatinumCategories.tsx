@@ -8,6 +8,12 @@ const categories = [
   { title: "Platinum Elite", icon: Crown, bg: "from-indigo-50 to-indigo-100", href: "/elite" },
   { title: "Platinum Grand", icon: Building2, bg: "from-purple-50 to-purple-100", href: "/grand" },
   { title: "Platinum Prime", icon: Star, bg: "from-blue-50 to-blue-100", href: "/prime" },
+  {
+    title: "Platinum Nest Men's Hostel",
+    icon: Building2,
+    bg: "from-emerald-50 to-emerald-100",
+    href: "/nest",
+  },
 ];
 
 export default function PlatinumCategories() {
