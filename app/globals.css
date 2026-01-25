@@ -71,3 +71,22 @@ body {
 .text-muted {
   color: #6b7280;
 }
+@keyframes letterUp {
+  0% {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(-4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-letter {
+  opacity: 0;
+  animation: letterUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
