@@ -1,8 +1,8 @@
 "use client";
 
-import { motion, useAnimation } from "framer-motion";
+import { motion, useAnimation, useInView } from "framer-motion";
+import type { Variants } from "framer-motion";
 import { useEffect, useRef } from "react";
-import { useInView } from "framer-motion";
 
 export default function Footer() {
   const controls = useAnimation();
@@ -19,7 +19,8 @@ export default function Footer() {
     "#0ea5e9", // sky
   ];
 
-  const letterVariants = {
+  // ✅ FIXED: Typed variants (this removes the red error)
+  const letterVariants: Variants = {
     hidden: {
       opacity: 0,
       y: 30,
@@ -38,10 +39,10 @@ export default function Footer() {
   useEffect(() => {
     if (!isInView) return;
 
-    // first play
+    // First animation
     controls.start("visible");
 
-    // repeat every 5 seconds
+    // Repeat every 5 seconds
     const interval = setInterval(() => {
       controls.start("hidden").then(() => {
         controls.start("visible");
@@ -72,9 +73,7 @@ export default function Footer() {
             custom={i}
             variants={letterVariants}
             className="mx-[1px]"
-            style={{
-              color: colors[i % colors.length],
-            }}
+            style={{ color: colors[i % colors.length] }}
           >
             {char === " " ? "\u00A0" : char}
           </motion.span>
