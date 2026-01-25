@@ -56,7 +56,7 @@ export default function TopContactBar() {
             href="mailto:info@saibabagroupofhostels.in"
             className="hover:text-yellow-300 transition"
           >
-            info@saibabagroupofhostels.in
+            info@platinumgroupofhostels.in
           </a>
         </div>
 
