@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "Sitemap: https://www.platinumgroupofhostels.in/sitemap.xml",
+    sitemap: "https://www.platinumgroupofhostels.in/sitemap.xml",
   };
 }
