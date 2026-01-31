@@ -80,13 +80,7 @@ facilities: [
     iconBg: "bg-teal-200",
   },
 
-  {
-    title: "Power Backup",
-    sub: "24/7 electricity",
-    icon: "power",
-    bg: "from-gray-50 to-gray-100",
-    iconBg: "bg-gray-200",
-  },
+  
 ]
 ,
 electricity: {
