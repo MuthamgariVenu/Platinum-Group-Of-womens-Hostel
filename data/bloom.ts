@@ -98,7 +98,7 @@ electricity: {
 
   rooms: {
     subtitle: "Room 2 / 3 / 4 Sharing Available",
-    prices: [
+    prices: [ 
       
       
       { type: "4 Sharing", price: "₹6000 And ₹6500" },
