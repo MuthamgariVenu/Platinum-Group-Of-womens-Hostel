@@ -25,7 +25,7 @@ export default function TopContactBar() {
 
             {isHomePage ? (
               <span className="text-white font-semibold tracking-wide text-sm sm:text-base">
-                Platinum Pg's Living
+                Platinum Living
               </span>
             ) : (
               <Link
