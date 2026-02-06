@@ -1,6 +1,6 @@
 "use client";
 
-import { Phone, Mail, Home } from "lucide-react";
+import { Phone } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -9,58 +9,55 @@ export default function TopContactBar() {
   const isHomePage = pathname === "/";
 
   return (
-    <div className="w-full bg-indigo-900 text-white text-sm sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 py-2 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+    <header className="sticky top-0 z-50">
 
-        {/* LEFT – exact same order as Sai Baba */}
-        <div className="flex flex-wrap items-center gap-6 justify-center sm:justify-start">
+      {/* Glass gradient background */}
+      <div className="backdrop-blur-xl bg-gradient-to-r from-indigo-900/90 via-purple-900/90 to-indigo-900/90 border-b border-white/10 shadow-sm">
 
-          {/* Contact 1 – SAME */}
-          <a
-            href="tel:8978499854"
-            className="flex items-center gap-1 font-semibold animate-pulse cursor-pointer text-yellow-300 hover:text-yellow-200 transition"
-          >
-            <Phone className="w-4 h-4" />
-            89784 99854
-          </a>
+        <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
 
-          {/* Contact 2 – SAME */}
-          <a
-            href="tel:9985499864"
-            className="flex items-center gap-1 font-semibold animate-pulse cursor-pointer text-green-300 hover:text-green-200 transition"
-          >
-            <Phone className="w-4 h-4" />
-            99854 99864
-          </a>
+          {/* LEFT — Brand */}
+          <div className="flex items-center gap-3">
 
-          {/* Landing → Site Name | Other pages → Home */}
-          {isHomePage ? (
-            <span className="font-semibold text-white">
-              Platinum Women’s Hostel
-            </span>
-          ) : (
-            <Link
-              href="/"
-              className="flex items-center gap-1 font-semibold text-white hover:text-yellow-300 transition"
+            <div className="h-9 w-9 rounded-xl bg-white/10 flex items-center justify-center font-bold text-white shadow-inner">
+              P
+            </div>
+
+            {isHomePage ? (
+              <span className="text-white font-semibold tracking-wide text-sm sm:text-base">
+                Platinum Pg's Living
+              </span>
+            ) : (
+              <Link
+                href="/"
+                className="text-white font-semibold tracking-wide hover:text-yellow-300 transition"
+              >
+                ← Back to Home
+              </Link>
+            )}
+          </div>
+
+          {/* RIGHT — Contacts */}
+          <div className="flex items-center gap-4">
+
+            <a
+              href="tel:8978499854"
+              className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-yellow-400/10 text-yellow-300 hover:bg-yellow-400/20 transition text-xs sm:text-sm font-medium"
             >
-              <Home className="w-4 h-4" />
-              Home
-            </Link>
-          )}
-        </div>
+              <Phone className="w-4 h-4" />
+              89784 99854
+            </a>
 
-        {/* RIGHT */}
-        <div className="flex items-center justify-center sm:justify-end gap-2">
-          <Mail className="w-4 h-4" />
-          <a
-            href="mailto:info@saibabagroupofhostels.in"
-            className="hover:text-yellow-300 transition"
-          >
-            info@platinumgroupofhostels.in
-          </a>
+            <a
+              href="tel:9985499864"
+              className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-green-400/10 text-green-300 hover:bg-green-400/20 transition text-xs sm:text-sm font-medium"
+            >
+              <Phone className="w-4 h-4" />
+              99854 99864
+            </a>
+          </div>
         </div>
-
       </div>
-    </div>
+    </header>
   );
 }
