@@ -22,7 +22,7 @@ export default function TopContactBar() {
 
             {/* LABEL */}
             <span className="text-white font-semibold text-sm sm:text-base">
-            Living
+            
             </span>
           </div>
 
