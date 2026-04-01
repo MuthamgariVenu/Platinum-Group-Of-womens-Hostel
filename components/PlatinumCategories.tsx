@@ -6,30 +6,41 @@ import {
   Crown,
   Building2,
   Star,
+  Home,
+  MapPin,
+  Hotel,
   Wifi,
   Utensils,
   Shield,
   Phone,
+  type LucideIcon,
 } from "lucide-react";
 
-const categories = [
-  { title: "Platinum Bloom", price: "₹6,000", icon: Sparkles, href: "/bloom" },
-  { title: "Platinum Elite", price: "₹6,500", icon: Crown, href: "/elite" },
-  { title: "Platinum Grand", price: "₹7,000", icon: Building2, href: "/grand" },
-  { title: "Platinum Prime", price: "₹6,500", icon: Star, href: "/prime" },
-  {
-    title: "Platinum Nest Men's Hostel",
-    price: "₹6,000",
-    icon: Building2,
-    href: "/nest",
-  },
-];
+type Branch = {
+  id: string;
+  title: string;
+  location: string;
+  badge: string;
+  icon: string;
+  bg: string;
+  href: string;
+  startingPrice?: string;
+};
 
-/** Header numbers */
+const ICON_MAP: Record<string, LucideIcon> = {
+  Sparkles,
+  Crown,
+  Building2,
+  Star,
+  Home,
+  MapPin,
+  Hotel,
+};
+
 const CALL_NUMBER = "tel:+918978499854";
 const WHATSAPP_NUMBER = "919985499864";
 
-export default function PlatinumCategories() {
+export default function PlatinumCategories({ branches }: { branches: Branch[] }) {
   const router = useRouter();
 
   const getWhatsAppLink = (title: string) =>
@@ -39,22 +50,20 @@ export default function PlatinumCategories() {
 
   return (
     <section className="mt-20 px-4 max-w-5xl mx-auto">
-      {/* Heading */}
       <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 text-center">
-        Our Premium Women’s PG Categories
+        Our Premium Women&apos;s PG Categories
       </h2>
       <p className="text-gray-500 text-center mt-2">
         Choose the lifestyle that fits you best
       </p>
 
-      {/* Grid */}
       <div className="grid md:grid-cols-2 gap-6 mt-10">
-        {categories.map((pg, index) => {
-          const Icon = pg.icon;
+        {branches.map((pg) => {
+          const Icon: LucideIcon = ICON_MAP[pg.icon] ?? Building2;
 
           return (
             <div
-              key={index}
+              key={pg.id}
               className="
                 group relative rounded-3xl bg-white p-6
                 shadow-[0_6px_25px_rgba(0,0,0,0.06)]
@@ -63,28 +72,33 @@ export default function PlatinumCategories() {
               "
             >
               {/* Glow */}
-              <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition duration-300 pointer-events-none
-                              bg-gradient-to-r from-purple-500/10 via-pink-500/10 to-purple-500/10 blur-xl" />
+              <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition duration-300 pointer-events-none bg-gradient-to-r from-purple-500/10 via-pink-500/10 to-purple-500/10 blur-xl" />
 
               <div className="relative">
-                {/* Title */}
-                <div className="flex items-center gap-3">
-                  <Icon className="w-6 h-6 text-purple-600" />
-                  <h3 className="text-lg font-semibold text-gray-900">
-                    {pg.title}
-                  </h3>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <Icon className="w-6 h-6 text-purple-600" />
+                    <h3 className="text-lg font-semibold text-gray-900">{pg.title}</h3>
+                  </div>
+                  {pg.badge && (
+                    <span className="text-[10px] bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full font-medium">
+                      {pg.badge}
+                    </span>
+                  )}
                 </div>
 
-                {/* Price */}
+                {pg.location && (
+                  <p className="text-xs text-gray-400 mt-1 ml-9">{pg.location}</p>
+                )}
+
                 <p className="mt-3 text-gray-500">
                   <span className="text-sm">Starting from </span>
                   <span className="text-2xl font-bold text-purple-700">
-                    {pg.price}
+                    {pg.startingPrice ?? "—"}
                   </span>
                   <span className="text-xs text-gray-400"> / month</span>
                 </p>
 
-                {/* Facilities */}
                 <div className="flex flex-wrap gap-2 mt-4">
                   <span className="flex items-center gap-1 text-xs bg-purple-50 text-purple-700 px-3 py-1 rounded-full">
                     <Wifi size={12} /> WiFi
@@ -97,43 +111,25 @@ export default function PlatinumCategories() {
                   </span>
                 </div>
 
-                {/* Buttons */}
                 <div className="grid grid-cols-2 gap-3 mt-5">
-                  {/* Call */}
                   <a
                     href={CALL_NUMBER}
-                    className="
-                      flex items-center justify-center gap-1
-                      border border-purple-600 text-purple-700
-                      py-2 rounded-lg text-sm font-medium
-                      hover:bg-purple-50 transition
-                    "
+                    className="flex items-center justify-center gap-1 border border-purple-600 text-purple-700 py-2 rounded-lg text-sm font-medium hover:bg-purple-50 transition"
                   >
                     <Phone size={14} /> Call
                   </a>
-
-                  {/* WhatsApp */}
                   <a
                     href={getWhatsAppLink(pg.title)}
                     target="_blank"
-                    className="
-                      text-center py-2 rounded-lg text-sm font-medium text-white
-                      bg-[#128C7E] hover:bg-[#0f7a6d]
-                      shadow-md hover:shadow-lg transition
-                    "
+                    className="text-center py-2 rounded-lg text-sm font-medium text-white bg-[#128C7E] hover:bg-[#0f7a6d] shadow-md hover:shadow-lg transition"
                   >
                     WhatsApp
                   </a>
                 </div>
 
-                {/* View Details */}
                 <button
                   onClick={() => router.push(pg.href)}
-                  className="
-                    w-full mt-3 border border-purple-600 text-purple-700
-                    py-2 rounded-lg text-sm font-medium
-                    hover:bg-purple-50 transition
-                  "
+                  className="w-full mt-3 border border-purple-600 text-purple-700 py-2 rounded-lg text-sm font-medium hover:bg-purple-50 transition"
                 >
                   View Details
                 </button>

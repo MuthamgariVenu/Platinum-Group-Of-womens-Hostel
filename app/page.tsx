@@ -1,19 +1,17 @@
+export const dynamic = 'force-dynamic';
+
 import DashboardHero from "@/components/DashboardHero";
 import PlatinumCategories from "@/components/PlatinumCategories";
 import Footer from "@/components/Footer";
+import { getBranches } from "@/lib/getData";
 
-// 👇 facilities data import
-import { bloomData } from "@/data/bloom";
+export default async function HomePage() {
+  const branches = await getBranches();
 
-export default function HomePage() {
   return (
     <main className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-pink-50">
       <DashboardHero />
-
-      {/* ✅ FIXED: data prop pass chesam */}
-      
-
-      <PlatinumCategories />
+      <PlatinumCategories branches={branches} />
       <Footer />
     </main>
   );
