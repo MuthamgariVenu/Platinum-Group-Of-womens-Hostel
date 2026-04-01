@@ -1,8 +1,11 @@
 export const dynamic = 'force-dynamic';
 
-import PgPage from "@/components/PgPage";
-import { bloomData } from "@/data/bloom";
+import { notFound } from 'next/navigation';
+import { getBranchDetail } from '@/lib/getData';
+import PgPage from '@/components/PgPage';
 
-export default function BloomPage() {
-  return <PgPage data={bloomData} />;
+export default async function BloomPage() {
+  const data = await getBranchDetail('bloom');
+  if (!data) notFound();
+  return <PgPage data={data} />;
 }

@@ -1,8 +1,11 @@
 export const dynamic = 'force-dynamic';
 
-import PgPage from "@/components/PgPage";
-import { primeData } from "@/data/prime";
+import { notFound } from 'next/navigation';
+import { getBranchDetail } from '@/lib/getData';
+import PgPage from '@/components/PgPage';
 
-export default function PrimePage() {
-  return <PgPage data={primeData} />;
+export default async function PrimePage() {
+  const data = await getBranchDetail('prime');
+  if (!data) notFound();
+  return <PgPage data={data} />;
 }

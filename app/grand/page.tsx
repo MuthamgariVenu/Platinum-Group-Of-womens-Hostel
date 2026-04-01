@@ -1,8 +1,11 @@
 export const dynamic = 'force-dynamic';
 
-import PgPage from "@/components/PgPage";
-import { grandData } from "@/data/grand";
+import { notFound } from 'next/navigation';
+import { getBranchDetail } from '@/lib/getData';
+import PgPage from '@/components/PgPage';
 
-export default function GrandPage() {
-  return <PgPage data={grandData} />;
+export default async function GrandPage() {
+  const data = await getBranchDetail('grand');
+  if (!data) notFound();
+  return <PgPage data={data} />;
 }

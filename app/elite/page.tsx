@@ -1,8 +1,11 @@
 export const dynamic = 'force-dynamic';
 
-import PgPage from "@/components/PgPage";
-import { eliteData } from "@/data/elite";
+import { notFound } from 'next/navigation';
+import { getBranchDetail } from '@/lib/getData';
+import PgPage from '@/components/PgPage';
 
-export default function ElitePage() {
-  return <PgPage data={eliteData} />;
+export default async function ElitePage() {
+  const data = await getBranchDetail('elite');
+  if (!data) notFound();
+  return <PgPage data={data} />;
 }
