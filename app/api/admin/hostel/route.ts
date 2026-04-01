@@ -40,23 +40,32 @@ export async function PUT(req: Request) {
   }
 
   try {
+    console.log('[PUT /api/admin/hostel] Attempting connectDB...');
     await connectDB();
+    console.log('[PUT /api/admin/hostel] connectDB succeeded. Running findOne...');
 
     const doc = await HostelDataModel.findOne();
+    console.log('[PUT /api/admin/hostel] findOne result:', doc ? 'existing doc found' : 'no doc, will create');
+
     if (doc) {
       doc.branches = branches;
       doc.branchDetails = branchDetails;
       doc.markModified('branches');
       doc.markModified('branchDetails');
       await doc.save();
+      console.log('[PUT /api/admin/hostel] doc.save() succeeded');
     } else {
       await HostelDataModel.create({ branches, branchDetails });
+      console.log('[PUT /api/admin/hostel] HostelDataModel.create() succeeded');
     }
 
     return NextResponse.json({ success: true });
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    console.error('[PUT /api/admin/hostel] Failed to save:', message);
+    const stack = error instanceof Error ? error.stack : undefined;
+    console.error('[PUT /api/admin/hostel] SAVE FAILED — message:', message);
+    console.error('[PUT /api/admin/hostel] SAVE FAILED — stack:', stack);
+    console.error('[PUT /api/admin/hostel] SAVE FAILED — full error:', error);
     return NextResponse.json(
       { success: false, error: 'Failed to save: ' + message },
       { status: 500 }

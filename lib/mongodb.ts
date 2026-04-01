@@ -15,9 +15,16 @@ if (!cached) {
 }
 
 export async function connectDB() {
-  if (cached.conn) return cached.conn;
+  console.log('[connectDB] MONGODB_URI present:', !!MONGODB_URI);
+  console.log('[connectDB] MONGODB_URI prefix:', MONGODB_URI.substring(0, 20) + '...');
+
+  if (cached.conn) {
+    console.log('[connectDB] Using cached connection');
+    return cached.conn;
+  }
 
   if (!cached.promise) {
+    console.log('[connectDB] Creating new connection...');
     cached.promise = mongoose
       .connect(MONGODB_URI, {
         dbName: "platinumhostels",
@@ -25,13 +32,18 @@ export async function connectDB() {
         serverSelectionTimeoutMS: 10000,
         connectTimeoutMS: 10000,
       })
-      .then((m) => m);
+      .then((m) => {
+        console.log('[connectDB] Connected successfully to MongoDB');
+        return m;
+      });
   }
 
   try {
     cached.conn = await cached.promise;
   } catch (err) {
     cached.promise = null;
+    console.error('[connectDB] Connection FAILED:', err instanceof Error ? err.message : String(err));
+    console.error('[connectDB] Full error:', err);
     throw err;
   }
 
