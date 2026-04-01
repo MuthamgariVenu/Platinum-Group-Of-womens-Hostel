@@ -20,9 +20,9 @@ export async function generateMetadata({ params }: { params: any }) {
 export default async function DynamicBranchPage({ params }: { params: any }) {
   const { branchId } = await params;
 
-  // Skip static branch IDs that have their own dedicated pages
-  const staticBranches = ['bloom', 'elite', 'grand', 'prime', 'nest'];
-  if (staticBranches.includes(branchId)) {
+  // Skip paths that have their own dedicated pages or are system routes
+  const reservedPaths = ['bloom', 'elite', 'grand', 'prime', 'nest', 'admin', 'api', '_next', 'favicon.ico'];
+  if (reservedPaths.includes(branchId)) {
     notFound();
   }
 

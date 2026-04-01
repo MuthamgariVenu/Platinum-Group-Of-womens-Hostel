@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-export const ADMIN_SESSION_TOKEN = 'pt_admin_2024_secure';
+const ADMIN_SESSION_TOKEN = 'pt_admin_2024_secure';
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (pathname.startsWith('/admin/') || pathname === '/admin/dashboard') {
