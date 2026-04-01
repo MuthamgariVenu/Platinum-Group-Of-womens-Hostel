@@ -1,11 +1,5 @@
 import mongoose from "mongoose";
 
-const MONGODB_URI = process.env.MONGODB_URI!;
-
-if (!MONGODB_URI) {
-  throw new Error("MONGODB_URI not defined");
-}
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let cached = (global as any).mongoose;
 
@@ -15,8 +9,19 @@ if (!cached) {
 }
 
 export async function connectDB() {
+  const MONGODB_URI = process.env.MONGODB_URI;
+
   console.log('[connectDB] MONGODB_URI present:', !!MONGODB_URI);
-  console.log('[connectDB] MONGODB_URI prefix:', MONGODB_URI.substring(0, 20) + '...');
+  if (MONGODB_URI) {
+    console.log('[connectDB] MONGODB_URI prefix:', MONGODB_URI.substring(0, 30) + '...');
+  }
+
+  if (!MONGODB_URI) {
+    throw new Error(
+      'MONGODB_URI environment variable is not set. ' +
+      'Add it in Vercel Dashboard → Project Settings → Environment Variables.'
+    );
+  }
 
   if (cached.conn) {
     console.log('[connectDB] Using cached connection');
