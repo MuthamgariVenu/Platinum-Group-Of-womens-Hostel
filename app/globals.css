@@ -90,3 +90,75 @@ body {
   opacity: 0;
   animation: letterUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
+
+/* ── Admin Layout: iOS Safari / iPhone 16 color fixes ──────────────────── */
+
+/* Force light color scheme — prevents iOS dark-mode from overriding colors */
+.admin-layout {
+  color-scheme: light;
+  color: #111111;
+  background-color: #f9fafb;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* Explicit dark text for all admin elements so nothing inherits grey */
+.admin-layout h1,
+.admin-layout h2,
+.admin-layout h3,
+.admin-layout h4,
+.admin-layout h5,
+.admin-layout h6,
+.admin-layout p,
+.admin-layout span,
+.admin-layout label,
+.admin-layout li,
+.admin-layout td,
+.admin-layout th,
+.admin-layout strong,
+.admin-layout small {
+  color: inherit;
+  -webkit-text-fill-color: currentColor;
+}
+
+/* Inputs / selects / textareas — iOS Safari uses -webkit-text-fill-color
+   over the color property, so we must set both explicitly */
+.admin-layout input,
+.admin-layout select,
+.admin-layout textarea {
+  color: #111111;
+  -webkit-text-fill-color: #111111;
+  background-color: #ffffff;
+  opacity: 1;
+}
+
+/* Placeholders — keep them readable but clearly secondary */
+.admin-layout input::placeholder,
+.admin-layout textarea::placeholder {
+  color: #9ca3af;
+  -webkit-text-fill-color: #9ca3af;
+  opacity: 1;
+}
+
+/* Disabled / readonly — visibly faded but not invisible */
+.admin-layout input:disabled,
+.admin-layout select:disabled,
+.admin-layout textarea:disabled,
+.admin-layout input[readonly],
+.admin-layout textarea[readonly] {
+  color: #6b7280;
+  -webkit-text-fill-color: #6b7280;
+  background-color: #f3f4f6;
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Buttons — keep their own explicit colors, just prevent iOS from
+   applying auto-grey on disabled state */
+.admin-layout button {
+  -webkit-text-fill-color: currentColor;
+}
+
+.admin-layout button:disabled {
+  opacity: 0.6;
+}

@@ -14,8 +14,17 @@ type Branch = {
   icon: string;
   bg: string;
   href: string;
-  startingPrice?: string;
+  startingPrice?: number | string;
 };
+
+function formatPrice(raw: string | number | undefined | null): string | null {
+  if (raw == null || raw === "") return null;
+  const num = typeof raw === "number"
+    ? raw
+    : parseInt(String(raw).replace(/[^0-9]/g, ""), 10);
+  if (isNaN(num) || num <= 0) return null;
+  return "₹" + num.toLocaleString("en-IN");
+}
 
 type HostelData = {
   branches: Branch[];
@@ -248,9 +257,9 @@ export default function AdminDashboard() {
                     <MapPin className="w-3 h-3" />
                     {branch.location}
                   </div>
-                  {branch.startingPrice && (
+                  {formatPrice(branch.startingPrice) && (
                     <p className="text-xs text-purple-700 font-medium mt-1">
-                      From {branch.startingPrice}/mo
+                      From {formatPrice(branch.startingPrice)}/mo
                     </p>
                   )}
                   <p className="text-[11px] text-gray-400 mt-1">ID: {branch.id}</p>
@@ -347,15 +356,24 @@ export default function AdminDashboard() {
 
               <div>
                 <label className="block text-xs font-medium text-gray-700 mb-1">
-                  Starting Price (optional)
+                  Starting Price — ₹ / month (optional)
                 </label>
-                <input
-                  type="text"
-                  value={newBranch.startingPrice}
-                  onChange={(e) => setNewBranch({ ...newBranch, startingPrice: e.target.value })}
-                  placeholder="e.g. ₹6,500"
-                  className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
-                />
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-500 select-none">₹</span>
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    value={newBranch.startingPrice}
+                    onChange={(e) => setNewBranch({ ...newBranch, startingPrice: e.target.value.replace(/[^0-9]/g, "") })}
+                    placeholder="e.g. 6500"
+                    className="w-full pl-7 pr-3 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  />
+                </div>
+                {newBranch.startingPrice && (
+                  <p className="text-[11px] text-purple-600 mt-1">
+                    Preview: Starting from ₹{Number(newBranch.startingPrice).toLocaleString("en-IN")} / month
+                  </p>
+                )}
               </div>
 
               <div className="grid grid-cols-2 gap-3">

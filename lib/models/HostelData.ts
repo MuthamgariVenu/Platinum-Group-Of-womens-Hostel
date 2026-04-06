@@ -9,7 +9,7 @@ export interface IHostelData extends Document {
     icon: string;
     bg: string;
     href: string;
-    startingPrice?: string;
+    startingPrice?: number;   // stored as number; undefined = hidden on listing
   }>;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   branchDetails: Record<string, any>;
@@ -18,10 +18,15 @@ export interface IHostelData extends Document {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const HostelDataSchema = new Schema<any>(
   {
-    branches: { type: [Schema.Types.Mixed], required: true },
-    branchDetails: { type: Schema.Types.Mixed, required: true },
+    // Store both as opaque Mixed blobs — no Mongoose array casting, no field stripping.
+    // This ensures arbitrary branch fields (e.g. startingPrice: number) survive save/load.
+    branches:      { type: Schema.Types.Mixed, default: [] },
+    branchDetails: { type: Schema.Types.Mixed, default: {} },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    strict: false,   // never strip unknown fields from the document
+  }
 );
 
 // Prevent model re-compilation in Next.js dev hot-reload

@@ -16,7 +16,9 @@ export default function TopContactBar() {
               src="/images/logo7.png"
               alt="Platinum"
               width={120}
-              height={120}
+              height={40}
+              priority
+              style={{ width: "auto", height: "36px", objectFit: "contain" }}
               className="rounded-md"
             />
 

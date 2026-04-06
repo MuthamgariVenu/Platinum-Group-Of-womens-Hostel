@@ -8,7 +8,7 @@
       "icon": "Sparkles",
       "bg": "from-pink-50 to-pink-100",
       "href": "/bloom",
-      "startingPrice": "₹6,000"
+      "startingPrice": 6000
     },
     {
       "id": "elite",
@@ -18,7 +18,7 @@
       "icon": "Crown",
       "bg": "from-indigo-50 to-indigo-100",
       "href": "/elite",
-      "startingPrice": "₹6,500"
+      "startingPrice": 6500
     },
     {
       "id": "grand",
@@ -28,7 +28,7 @@
       "icon": "Building2",
       "bg": "from-purple-50 to-purple-100",
       "href": "/grand",
-      "startingPrice": "₹7,000"
+      "startingPrice": 7000
     },
     {
       "id": "prime",
@@ -38,7 +38,7 @@
       "icon": "Star",
       "bg": "from-emerald-50 to-emerald-100",
       "href": "/prime",
-      "startingPrice": "₹6,500"
+      "startingPrice": 6500
     },
     {
       "id": "nest",
@@ -48,14 +48,14 @@
       "icon": "Building2",
       "bg": "from-blue-50 to-blue-100",
       "href": "/nest",
-      "startingPrice": "₹6,000"
+      "startingPrice": 6000
     }
   ],
   "branchDetails": {
     "bloom": {
       "hero": {
         "image": "/images/b1.jpg",
-        "rating": "4.7",
+        "rating": "4.9",
         "area": "Siddiq Nagar",
         "address": "Road Number 10th, Siddiq Nagar, Hitech City, Hyderabad – 500032",
         "landmark": "",
@@ -67,7 +67,8 @@
         "title": "Platinum Bloom Women's PG",
         "subtitle": "Clean Rooms • Homely Food • Near Metro",
         "primaryPhone": "9701716111",
-        "secondaryPhone": "9985499864"
+        "secondaryPhone": "9985499864",
+        "startingPrice": "6000"
       },
       "facilities": [
         {

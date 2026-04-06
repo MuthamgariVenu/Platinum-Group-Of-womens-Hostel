@@ -43,6 +43,7 @@ type HeroData = {
   subtitle: string;
   primaryPhone: string;
   secondaryPhone: string;
+  startingPrice?: string;
 };
 
 type FoodData = {
@@ -126,6 +127,7 @@ const DEFAULT_DETAIL: BranchDetail = {
     subtitle: "",
     primaryPhone: "9701716111",
     secondaryPhone: "9985499864",
+    startingPrice: "",
   },
   facilities: [],
   electricity: { included: false, text: "" },
@@ -162,8 +164,16 @@ export default function BranchEditor() {
       setHostelData(data);
       if (data.branchDetails && data.branchDetails[branchId]) {
         const bd = data.branchDetails[branchId];
+        // Migrate: if hero.startingPrice not yet set, seed it from branches[] entry
+        const branch = data.branches.find((b) => b.id === branchId);
+        const migratedPrice =
+          bd.hero?.startingPrice != null
+            ? String(bd.hero.startingPrice).replace(/[^0-9]/g, "")
+            : branch?.startingPrice != null
+            ? String(branch.startingPrice).replace(/[^0-9]/g, "")
+            : "";
         setDetail({
-          hero: { ...DEFAULT_DETAIL.hero, ...bd.hero },
+          hero: { ...DEFAULT_DETAIL.hero, ...bd.hero, startingPrice: migratedPrice },
           facilities: bd.facilities || [],
           electricity: { ...DEFAULT_DETAIL.electricity, ...bd.electricity },
           food: { ...DEFAULT_DETAIL.food, ...bd.food },
@@ -184,13 +194,23 @@ export default function BranchEditor() {
   const handleSave = async () => {
     if (!hostelData) return;
     setSaving(true);
+    // Derive numeric price from hero field (same source of truth as all other hero fields)
+    const rawDigits = (detail.hero.startingPrice ?? "").replace(/[^0-9]/g, "");
+    const priceNum = rawDigits ? Number(rawDigits) : undefined;
+    // Sync to branches[] so listing cards stay up to date
+    const updatedBranches = hostelData.branches.map((b) =>
+      b.id === branchId ? { ...b, startingPrice: priceNum } : b
+    );
     const updated: HostelData = {
       ...hostelData,
+      branches: updatedBranches,
       branchDetails: {
         ...hostelData.branchDetails,
         [branchId]: detail,
       },
     };
+    console.log("[handleSave] payload branches[0]", JSON.stringify(updatedBranches.find((b) => b.id === branchId)));
+    console.log("[handleSave] startingPrice (number)", priceNum);
     try {
       const res = await fetch("/api/admin/hostel", {
         method: "PUT",
@@ -404,6 +424,31 @@ export default function BranchEditor() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <Field label="Primary Phone" value={detail.hero.primaryPhone} onChange={(v) => updateHero("primaryPhone", v)} placeholder="9701716111" />
                 <Field label="Secondary Phone" value={detail.hero.secondaryPhone} onChange={(v) => updateHero("secondaryPhone", v)} placeholder="9985499864" />
+              </div>
+
+              {/* Starting Price */}
+              <div>
+                <label className="block text-xs font-medium text-gray-700 mb-1">
+                  Starting Price (₹ / month)
+                </label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-500 select-none">₹</span>
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    value={detail.hero.startingPrice ?? ""}
+                    onChange={(e) => updateHero("startingPrice", e.target.value.replace(/[^0-9]/g, ""))}
+                    placeholder="e.g. 6000"
+                    className="w-full pl-7 pr-3 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-purple-400"
+                  />
+                </div>
+                {detail.hero.startingPrice ? (
+                  <p className="text-[11px] text-purple-600 mt-1">
+                    Preview: Starting from ₹{parseInt(detail.hero.startingPrice ?? "", 10).toLocaleString("en-IN")} / month
+                  </p>
+                ) : (
+                  <p className="text-[11px] text-gray-400 mt-1">Leave empty to hide price on listing card</p>
+                )}
               </div>
 
               {/* Nearby */}

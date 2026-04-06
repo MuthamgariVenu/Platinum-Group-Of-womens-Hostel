@@ -3,7 +3,7 @@ import path from 'path';
 import { connectDB } from './mongodb';
 import { HostelDataModel } from './models/HostelData';
 
-type Branch = {
+export type Branch = {
   id: string;
   title: string;
   location: string;
@@ -11,36 +11,69 @@ type Branch = {
   icon: string;
   bg: string;
   href: string;
-  startingPrice?: string;
+  startingPrice?: number;
 };
 
-// Reads from MongoDB; falls back to hostelData.json if connection fails
-export async function getFullHostelData() {
-  const filePath = path.join(process.cwd(), 'data', 'hostelData.json');
+const DATA_FILE = path.join(process.cwd(), 'data', 'hostelData.json');
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function readJsonFile(): { branches: Branch[]; branchDetails: Record<string, any> } {
+  const raw = fs.readFileSync(DATA_FILE, 'utf-8');
+  const data = JSON.parse(raw);
+  return { ...data, branches: normalizeBranches(data.branches) };
+}
+
+/**
+ * Ensure startingPrice is always a number (or undefined).
+ * Handles strings like "6000", "₹6,000", numbers like 6000, and null/undefined.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function normalizeBranches(raw: any[]): Branch[] {
+  return (raw || []).map((b) => {
+    const sp = b.startingPrice;
+    const num = sp != null
+      ? Number(String(sp).replace(/[^0-9]/g, ''))
+      : NaN;
+    return {
+      ...b,
+      startingPrice: Number.isFinite(num) && num > 0 ? num : undefined,
+    };
+  });
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function getFullHostelData(): Promise<{ branches: Branch[]; branchDetails: Record<string, any> }> {
   try {
-    await connectDB();
+    const conn = await connectDB();
 
-    let doc = await HostelDataModel.findOne().lean();
+    // DB not available — use local JSON immediately, no model calls
+    if (!conn) {
+      console.warn('[getData] DB offline, reading hostelData.json');
+      return readJsonFile();
+    }
+
+    const doc = await HostelDataModel.findOne().lean();
 
     if (!doc) {
-      const raw = fs.readFileSync(filePath, 'utf-8');
-      const seed = JSON.parse(raw);
+      // First run: seed DB from JSON
+      const seed = readJsonFile();
       const created = await HostelDataModel.create(seed);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return { branches: created.branches, branchDetails: created.branchDetails as Record<string, any> };
+      return {
+        branches: normalizeBranches(created.branches as Branch[]),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        branchDetails: created.branchDetails as Record<string, any>,
+      };
     }
 
     return {
-      branches: doc.branches as Branch[],
+      branches: normalizeBranches(doc.branches as Branch[]),
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       branchDetails: doc.branchDetails as Record<string, any>,
     };
   } catch {
-    // MongoDB unavailable — fall back to local JSON
-    const raw = fs.readFileSync(filePath, 'utf-8');
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return JSON.parse(raw) as { branches: Branch[]; branchDetails: Record<string, any> };
+    // Any unexpected error — fall back to JSON
+    console.warn('[getData] Unexpected error, falling back to hostelData.json');
+    return readJsonFile();
   }
 }
 

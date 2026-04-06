@@ -24,8 +24,19 @@ type Branch = {
   icon: string;
   bg: string;
   href: string;
-  startingPrice?: string;
+  startingPrice?: number | string;
 };
+
+/** Strip non-digits, format with Indian thousands separator, prefix ₹.
+ *  Returns null when the value is empty/missing so the caller can hide the section. */
+function formatPrice(raw: string | number | undefined | null): string | null {
+  if (raw == null || raw === "") return null;
+  const num = typeof raw === "number"
+    ? raw
+    : parseInt(String(raw).replace(/[^0-9]/g, ""), 10);
+  if (isNaN(num) || num <= 0) return null;
+  return "₹" + num.toLocaleString("en-IN");
+}
 
 const ICON_MAP: Record<string, LucideIcon> = {
   Sparkles,
@@ -91,13 +102,15 @@ export default function PlatinumCategories({ branches }: { branches: Branch[] })
                   <p className="text-xs text-gray-400 mt-1 ml-9">{pg.location}</p>
                 )}
 
-                <p className="mt-3 text-gray-500">
-                  <span className="text-sm">Starting from </span>
-                  <span className="text-2xl font-bold text-purple-700">
-                    {pg.startingPrice ?? "—"}
-                  </span>
-                  <span className="text-xs text-gray-400"> / month</span>
-                </p>
+                {formatPrice(pg.startingPrice) && (
+                  <p className="mt-3">
+                    <span className="text-sm text-gray-500">Starting from </span>
+                    <span className="text-2xl font-bold text-purple-700">
+                      {formatPrice(pg.startingPrice)}
+                    </span>
+                    <span className="text-xs text-gray-400"> / month</span>
+                  </p>
+                )}
 
                 <div className="flex flex-wrap gap-2 mt-4">
                   <span className="flex items-center gap-1 text-xs bg-purple-50 text-purple-700 px-3 py-1 rounded-full">
